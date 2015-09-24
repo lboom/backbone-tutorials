@@ -17,19 +17,26 @@ $(document).ready( function () {
     counterModel1.fetch();
 
 var CounterView = Backbone.View.extend({
+        stamp: '',
         render: function () {
             var val = this.model.get("value");
             var btn = '<button>Increment</button>';
-            this.$el.html('<p>'+val+'</p>' + btn);
+            var syncDate = '<p> Sync event: ' + this.stamp + '</p>';
+            this.$el.html('<p>'+val+'</p>' + btn + syncDate);
         },
         initialize: function () {
             this.model.on("change", this.render, this);
+            this.model.on("sync", this.syn, this);
         },
         events : {
             'click button' : 'increment'
         },
         increment : function () {
             this.model.inc();
+        },
+        syn: function() {
+            this.stamp = Date.now();
+            this.render();
         }
     });
     
